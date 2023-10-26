@@ -15,20 +15,15 @@ import javax.inject.Inject
 class PhotosPagingSource @Inject constructor(
     private val photoRepository: PhotoRepository
 ): PagingSource<Int, Size>() {
-    private val sizesList = mutableListOf<Size>()
-
-    override suspend fun load(
-        params: LoadParams<Int>
-    ): LoadResult<Int, Size> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Size> {
         return try {
             val currentPage = params.key ?: DEFAULT_INIT_KEY
             val photos = getPhotos(currentPage)
 
-            sizesList.clear()
-            for (photo: Photo in photos.photo) {
-                val size = getPhotoSizeById(photo.id)
-                size?.let { sizesList.add(size) }
+            val sizesList = photos.photo.mapNotNull {
+                getPhotoSizeById(it.id)
             }
+
             LoadResult.Page(
                 data = sizesList,
                 prevKey = null,
