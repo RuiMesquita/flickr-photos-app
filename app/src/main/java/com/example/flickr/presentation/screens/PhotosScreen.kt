@@ -26,7 +26,7 @@ import coil.compose.AsyncImage
 import com.example.flickr.domain.model.Size
 
 @Composable
-fun PhotosScreen(sizes: LazyPagingItems<Size>, modifier: Modifier = Modifier) {
+fun PhotosScreen(sizes: LazyPagingItems<Size>) {
 
     when(sizes.loadState.refresh) {
         is LoadState.Loading -> {
@@ -45,7 +45,7 @@ fun PhotosScreen(sizes: LazyPagingItems<Size>, modifier: Modifier = Modifier) {
                 items(sizes.itemCount) {i ->
                     AsyncImage(
                         model = sizes[i]!!.source,
-                        contentDescription = "not able to load image",
+                        contentDescription = "kitten photo",
                         modifier = Modifier
                             .padding(10.dp)
                             .width(sizes[i]!!.width.dp)
@@ -61,9 +61,7 @@ fun PhotosScreen(sizes: LazyPagingItems<Size>, modifier: Modifier = Modifier) {
                             val error = sizes.loadState.refresh as LoadState.Error
                             item { error.error.localizedMessage?.let { ErrorItem(message = it) } }
                         }
-                        else -> {
-                            // do nothing
-                        }
+                        else -> {}
                     }
                 }
             }
